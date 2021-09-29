@@ -48,4 +48,4 @@ async def on_message(message):
     # if msg.startswith('Robot-kun,'):
     #     await message.channel.send('はい')
 
-client.run("ODkyMzg3ODU5NDMxMDQ3MTk4.YVMK9Q.gHFmeLIp7Epmxe_nzsbynhHxmfk")
+client.run(os.getenv('TOKEN'))
