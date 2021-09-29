@@ -1,8 +1,7 @@
+from tools.kanji import kanji
 import discord
-import os
-import requests
-import json
 import logging
+import os
 
 # Inisialisasi Discord API
 client = discord.Client()
@@ -13,21 +12,6 @@ logger.setLevel(logging.DEBUG)
 handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 logger.addHandler(handler)
-
-# Fungsi untuk menterjemahkan kata dari bahasa Inggris menjadi Jepang dengan KanjiAlive API
-def get_kanji(word="see"):
-    url = "https://kanjialive-api.p.rapidapi.com/api/public/search/advanced/"
-    querystring = {"rem":word}
-    headers = {
-        'x-rapidapi-host': "kanjialive-api.p.rapidapi.com",
-        'x-rapidapi-key': "cffe543a60msh7a6d9f78131a3a7p17436cjsnbc606a064d5f"
-        }
-
-    response = requests.request("GET", url, headers=headers, params=querystring)
-    json_data = json.loads(response.text)
-    kanji = json_data[0]["kanji"]["character"]
-
-    return kanji
 
 # Fungsi yang akan dijalankan ketika bot berjalan
 @client.event
@@ -45,9 +29,9 @@ async def on_message(message):
     if msg.startswith('Robot-kun, translate'):
         word = msg.split("Robot-kun, translate ", 1)[1]
         print(word)
-        kanji = get_kanji(word)
+        word = kanji.search(word)
 
-        await message.channel.send(kanji)
+        await message.channel.send(word)
 
 # Memulai bot
 client.run(os.environ['TOKEN'])
