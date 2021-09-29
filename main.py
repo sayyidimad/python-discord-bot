@@ -37,8 +37,11 @@ async def translate(ctx, word: str):
 
 @bot.command()
 async def vsbattles(ctx, name: str):
-    """Mendapatkan quote dari karakter anime shounen."""
-    await ctx.send(vs_battles.character(name))
+    """Mendapatkan bio singkat dari karakter anime shounen."""
+    character = vs_battles(name)
+
+    await ctx.send(character.bio())
+    await ctx.send(character.summary())
 
 # Memulai bot
 bot.run(os.environ['TOKEN'])
