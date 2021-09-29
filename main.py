@@ -1,4 +1,5 @@
 from tools.kanji import kanji
+from tools.vs_battles import vs_battles
 from discord.ext import commands
 import discord
 import logging
@@ -33,6 +34,11 @@ async def add(ctx, left: int, right: int):
 async def translate(ctx, word: str):
     """Menterjemahkan kata menjadi Kanji Jepang."""
     await ctx.send(kanji.search(word))
+
+@bot.command()
+async def vsbattles(ctx, name: str):
+    """Mendapatkan quote dari karakter anime shounen."""
+    await ctx.send(vs_battles.character(name))
 
 # Memulai bot
 bot.run(os.environ['TOKEN'])
