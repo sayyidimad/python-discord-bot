@@ -4,11 +4,10 @@ import requests
 import json
 import random
 
+# Inisialisasi Discord API
 client = discord.Client()
 
-sad_words = ["sad", "depressed", "unhappy", "angry", "miserable", "depressing"]
-starter_encouragements = ["Daijoubu dayo!", "Yoshi yoshi, kimi wa yasashii ko da ne.", "Ganbatte"]
-
+# Fungsi untuk menterjemahkan kata dari bahasa Inggris menjadi Jepang dengan KanjiAlive API
 def get_kanji(word="see"):
     url = "https://kanjialive-api.p.rapidapi.com/api/public/search/advanced/"
     querystring = {"rem":word}
@@ -23,29 +22,25 @@ def get_kanji(word="see"):
 
     return kanji
 
+# Fungsi yang akan dijalankan ketika bot berjalan
 @client.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
 
+# Fungsi yang akan dijalankan ketika terdapat pesan yang masuk
 @client.event
 async def on_message(message):
-    if message.author == client.user:
-        pass
-
     msg = message.content
 
-    if any(word in msg for word in sad_words):
-        await message.channel.send(random.choice(starter_encouragements))
+    if message.author == client.user:
+        pass
 
     if msg.startswith('Robot-kun, translate'):
         word = msg.split("Robot-kun, translate ", 1)[1]
         print(word)
-
         kanji = get_kanji(word)
 
         await message.channel.send(kanji)
 
-    # if msg.startswith('Robot-kun,'):
-    #     await message.channel.send('はい')
-
+# Memulai bot
 client.run(os.getenv('TOKEN'))
