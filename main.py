@@ -1,10 +1,13 @@
 from tools.kanji import kanji
+from discord.ext import commands
 import discord
 import logging
 import os
 
+description = '''Bot ini dapat digunakan untuk mencari informasi character shounen.'''
+
 # Inisialisasi Discord API
-client = discord.Client()
+bot = commands.Bot(command_prefix='Robot-kun!', description=description)
 
 # Inisialisasi Logger
 logger = logging.getLogger('discord')
@@ -14,24 +17,22 @@ handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(me
 logger.addHandler(handler)
 
 # Fungsi yang akan dijalankan ketika bot berjalan
-@client.event
+@bot.event
 async def on_ready():
-    print('We have logged in as {0.user}'.format(client))
+    print('Logged in as')
+    print(bot.user.name)
+    print(bot.user.id)
+    print('------')
 
-# Fungsi yang akan dijalankan ketika terdapat pesan yang masuk
-@client.event
-async def on_message(message):
-    msg = message.content
+@bot.command(description="ini adalah deskripsi tambahan")
+async def add(ctx, left: int, right: int):
+    """Menjumlahkan 2 bilangan."""
+    await ctx.send(left + right)
 
-    if message.author == client.user:
-        pass
-
-    if msg.startswith('Robot-kun, translate'):
-        word = msg.split("Robot-kun, translate ", 1)[1]
-        print(word)
-        word = kanji.search(word)
-
-        await message.channel.send(word)
+@bot.command()
+async def translate(ctx, word: str):
+    """Menterjemahkan kata menjadi Kanji Jepang."""
+    await ctx.send(kanji.search(word))
 
 # Memulai bot
-client.run(os.environ['TOKEN'])
+bot.run(os.environ['TOKEN'])
