@@ -1,5 +1,4 @@
-from tools.kanji import kanji
-from tools.vs_battles import vs_battles
+from helper.VSBattles import VSBattles
 from discord.ext import commands
 import discord
 import logging
@@ -25,22 +24,13 @@ async def on_ready():
     print(bot.user.id)
     print('------')
 
-@bot.command(description="ini adalah deskripsi tambahan")
-async def add(ctx, left: int, right: int):
-    """Menjumlahkan 2 bilangan."""
-    await ctx.send(left + right)
-
-@bot.command()
-async def translate(ctx, word: str):
-    """Menterjemahkan kata menjadi Kanji Jepang."""
-    await ctx.send(kanji.search(word))
-
 @bot.command()
 async def vsbattles(ctx, name: str):
     """Mendapatkan bio singkat dari karakter anime shounen."""
-    character = vs_battles(name)
+    character = VSBattles(name)
 
     await ctx.send(character.bio())
+    await ctx.send(character.image())
     await ctx.send(character.summary())
 
 # Memulai bot
