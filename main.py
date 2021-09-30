@@ -25,14 +25,15 @@ async def on_ready():
     print('------')
 
 @bot.command()
-async def vsbattles(ctx, name: str):
+async def char(ctx, name: str):
     """Mendapatkan bio singkat dari karakter anime shounen."""
     character = VSBattles(name)
     embed = discord.Embed()
 
-    embed.title = name
+    embed.url = character.url
+    embed.title = character.name
     embed.description = character.bio()
-    embed.colour = discord.Colour.blurple()
+    embed.colour = discord.Colour.blue()
 
     embed.set_image(url=character.image())
     embed.set_footer(text=character.summary())
