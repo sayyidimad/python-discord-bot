@@ -17,7 +17,7 @@ class VSBattles():
                 break
 
             if html.find_next_sibling().name == "p":
-                bio.append("> " + html.find_next_sibling().text)
+                bio.append(html.find_next_sibling().text)
 
             html = html.find_next_sibling()
 
@@ -40,4 +40,4 @@ class VSBattles():
 
             html = html.find_next_sibling()
 
-        return "```" + "\n".join(summary) + "```"
+        return "\n".join(summary)

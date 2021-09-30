@@ -28,10 +28,16 @@ async def on_ready():
 async def vsbattles(ctx, name: str):
     """Mendapatkan bio singkat dari karakter anime shounen."""
     character = VSBattles(name)
+    embed = discord.Embed()
 
-    await ctx.send(character.bio())
-    await ctx.send(character.image())
-    await ctx.send(character.summary())
+    embed.title = name
+    embed.description = character.bio()
+    embed.colour = discord.Colour.blurple()
+
+    embed.set_image(url=character.image())
+    embed.set_footer(text=character.summary())
+
+    await ctx.send(embed=embed)
 
 # Memulai bot
 bot.run(os.environ['TOKEN'])
