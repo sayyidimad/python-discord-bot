@@ -1,10 +1,8 @@
 from bs4 import BeautifulSoup
 import requests
 
-class VSBattles():
-    # url, soup = "https://vsbattles.fandom.com/wiki/", ""
-    # tier, name, origin, gender, age, classification = "", "", "", "", "", ""
 
+class VSBattles():
     def __init__(self, name):
         self.url = "https://vsbattles.fandom.com/wiki/" + name
         self.soup = BeautifulSoup(requests.get(self.url).text, "lxml")
@@ -17,7 +15,8 @@ class VSBattles():
         self.classification = self.get_classification()
 
     def get_tier(self):
-        html = self.soup.find("a", text="Tier").find_parent().find_parent().text
+        html = self.soup.find(
+            "a", text="Tier").find_parent().find_parent().text
         tier = html.replace("Tier: ", "")
 
         return tier
