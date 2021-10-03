@@ -1,7 +1,9 @@
 from helper.VSBattles import VSBattles
+from helper.TriviaDB import TriviaDB
 from discord.ext import commands
 import discord
 import logging
+import html
 import os
 
 description = '''Bot ini dapat digunakan untuk mencari informasi character shounen.'''
@@ -66,6 +68,41 @@ async def char(ctx, name: str):
     embed.set_footer(text=character.summary())
 
     await ctx.send(embed=embed)
+
+
+@bot.command()
+async def quiz(ctx):
+    """Quiz tentang anime."""
+    quiz = TriviaDB()
+    embed = discord.Embed()
+
+    # loop answers
+    numbers = ["1️⃣", "2️⃣", "3️⃣", "4️⃣"]
+    answers = ""
+    for index, answer in enumerate(quiz.get_answers()):
+        answers += f"{numbers[index]} = {answer}\n"
+
+    embed.title = html.unescape(quiz.question)
+    embed.colour = discord.Colour.blue()
+
+    embed.description = html.unescape(answers)
+    message = await ctx.send(embed=embed)
+
+    for number in numbers:
+        await message.add_reaction(number)
+
+
+@bot.event
+async def on_reaction_add(reaction, user):
+    if user != bot.user:
+        if str(reaction.emoji) == "➡️":
+            # fetch new results from the Spotify API
+            newSearchResult = discord.Embed(...)
+            await reaction.message.edit(embed=newSearchResult)
+        if str(reaction.emoji) == "⬅️":
+            # fetch new results from the Spotify API
+            newSearchResult = discord.Embed(...)
+            await reaction.message.edit(embed=newSearchResult)
 
 # Memulai bot
 bot.run(os.environ['TOKEN'])
