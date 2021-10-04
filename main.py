@@ -1,6 +1,7 @@
 from helper.VSBattles import VSBattles
 from helper.TriviaDB import TriviaDB
 from discord.ext import commands
+from replit import db
 import discord
 import logging
 import html
@@ -82,6 +83,10 @@ async def quiz(ctx):
     embed.description = html.unescape(quiz.format_answers())
     message = await ctx.send(embed=embed)
 
+    db["message_id"] = message.id
+    db["answers"] = quiz.answers
+    db["correct"] = quiz.correct
+
     for answer in quiz.answers:
         await message.add_reaction(answer)
 
@@ -89,16 +94,18 @@ async def quiz(ctx):
 @bot.event
 async def on_reaction_add(reaction, user):
 
-    if user != bot.user:
-        await reaction.message.edit(embed=discord.Embed(description="kamu telah menjawab"))
-        # if str(reaction.emoji) == "➡️":
-        #     # fetch new results from the Spotify API
-        #     newSearchResult = discord.Embed(...)
-        #     await reaction.message.edit(embed=newSearchResult)
-        # if str(reaction.emoji) == "⬅️":
-        #     # fetch new results from the Spotify API
-        #     newSearchResult = discord.Embed(...)
-        #     await reaction.message.edit(embed=newSearchResult)
+    if user != bot.user and reaction.message.id == db["message_id"]:
+      embed = discord.Embed()
+      embed.colour = discord.Colour.blue()
+      embed.description = "Jawabannya adalah... **" + db["correct"] + "**" 
+
+      if db["answers"][str(reaction.emoji)] == db["correct"]:
+        embed.title = "Jawabanmu benar!"
+      else:
+        embed.title = "Jawabanmu salah!"
+      
+      await reaction.message.edit(embed=embed)
+        
 
 # Memulai bot
 bot.run(os.environ['TOKEN'])
