@@ -76,33 +76,29 @@ async def quiz(ctx):
     quiz = TriviaDB()
     embed = discord.Embed()
 
-    # loop answers
-    numbers = ["1️⃣", "2️⃣", "3️⃣", "4️⃣"]
-    answers = ""
-    for index, answer in enumerate(quiz.get_answers()):
-        answers += f"{numbers[index]} = {answer}\n"
-
     embed.title = html.unescape(quiz.question)
     embed.colour = discord.Colour.blue()
 
-    embed.description = html.unescape(answers)
+    embed.description = html.unescape(quiz.format_answers())
     message = await ctx.send(embed=embed)
 
-    for number in numbers:
-        await message.add_reaction(number)
+    for answer in quiz.answers:
+        await message.add_reaction(answer)
 
 
 @bot.event
 async def on_reaction_add(reaction, user):
+
     if user != bot.user:
-        if str(reaction.emoji) == "➡️":
-            # fetch new results from the Spotify API
-            newSearchResult = discord.Embed(...)
-            await reaction.message.edit(embed=newSearchResult)
-        if str(reaction.emoji) == "⬅️":
-            # fetch new results from the Spotify API
-            newSearchResult = discord.Embed(...)
-            await reaction.message.edit(embed=newSearchResult)
+        await reaction.message.edit(embed=discord.Embed(description="kamu telah menjawab"))
+        # if str(reaction.emoji) == "➡️":
+        #     # fetch new results from the Spotify API
+        #     newSearchResult = discord.Embed(...)
+        #     await reaction.message.edit(embed=newSearchResult)
+        # if str(reaction.emoji) == "⬅️":
+        #     # fetch new results from the Spotify API
+        #     newSearchResult = discord.Embed(...)
+        #     await reaction.message.edit(embed=newSearchResult)
 
 # Memulai bot
 bot.run(os.environ['TOKEN'])
